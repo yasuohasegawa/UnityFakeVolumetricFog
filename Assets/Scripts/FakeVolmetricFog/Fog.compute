@@ -1,0 +1,33 @@
+﻿#pragma kernel CSMain
+#define THREAD_BLOCK_SIZE 16
+#define PI 3.14159265359
+#define degToRad (PI * 2.0) / 360.0
+
+RWStructuredBuffer<float3> PositionBuffer;
+RWStructuredBuffer<float4x4> RotationMatrixBuffer;
+
+float _Time;
+
+float4x4 matRotateZ(float rad)
+{
+    return float4x4(cos(rad), -sin(rad), 0, 0,
+					sin(rad), cos(rad), 0, 0,
+					0, 0, 1, 0,
+					0, 0, 0, 1);
+}
+
+[numthreads(THREAD_BLOCK_SIZE, 1, 1)]
+void CSMain(uint id : SV_DispatchThreadID)
+{
+    float3 pos = PositionBuffer[id];
+    PositionBuffer[id] = pos;
+
+    float4x4 rmat = RotationMatrixBuffer[id];
+
+    float dir = 1.0;
+    if (fmod(id, 3.0) >= 1.0)
+        dir = -1.0;
+    float rad = (_Time * 0.005 * (fmod(id, 100.0) * 10.0) * degToRad) * dir;
+    float4x4 rotZ = matRotateZ(rad);
+    RotationMatrixBuffer[id] = rotZ;
+}
