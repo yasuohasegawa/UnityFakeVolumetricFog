@@ -1,2 +1,2 @@
 # UnityFakeVolumetricFog
-This example is a demo of fake volumetric fog using compute shader and instancing. It takes only one batch, but it looks realistic fog.
+This example serves as a demonstration of simulated volumetric fog achieved through a compute shader and instancing techniques. Despite utilizing only a single batch, the resulting fog appears convincingly realistic.
